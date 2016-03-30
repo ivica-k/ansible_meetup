@@ -1,0 +1,5 @@
+loadbalancer ansible_host=mysite.ans
+
+[webservers]
+web1.ans
+web2.ans
