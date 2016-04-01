@@ -1,0 +1,36 @@
+---
+- name: Webservers playbook
+  become: yes
+  hosts: webservers
+  gather_facts: yes
+  tasks:
+    - name: Install packages
+      yum: name={{ item }} state=present
+      with_items:
+        - httpd
+        - python-setuptools
+      notify: restart_apache
+
+    - name: Install FirewallD dependencies using PIP
+      pip: name={{ item }}
+      with_items:
+        - backports.ssl_match_hostname
+        - firewall
+        - decorator
+
+    - name: Start FirewallD
+      service: name=firewalld state=started enabled=yes
+
+    - name: Open port 80
+      firewalld: port=80/tcp permanent=true state=enabled
+      notify: restart_firewalld
+
+    - name: Copy sample webpage
+      template: src=../templates/index.html dest=/var/www/html/
+
+  handlers:
+    - name: restart_apache
+      service: name=httpd state=restarted enabled=yes
+
+    - name: restart_firewalld
+      service: name=firewalld state=restarted enabled=yes
