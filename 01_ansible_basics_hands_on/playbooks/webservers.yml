@@ -19,6 +19,15 @@
     - name: Create wp-config
       template: src=../templates/wp-config.php.j2 dest=/var/www/html/wordpress/wp-config.php
 
+    - name: Create vhosts entries
+      lineinfile:
+          dest=/etc/httpd/conf/httpd.conf
+          line="<VirtualHost *:80>\n
+                DocumentRoot "/var/www/html/wordpress"\n
+                ServerName {{ inventory_hostname }}\n
+             </VirtualHost>"
+          insertafter=EOF
+
   handlers:
     - name: restart_apache
       service: name=httpd state=restarted enabled=yes
