@@ -1,0 +1,24 @@
+---
+- name: Webservers playbook
+  become: yes
+  hosts: webservers
+  gather_facts: yes
+  tasks:
+    - name: Install packages
+      yum: name={{ item }} state=present
+      with_items:
+        - httpd
+        - php
+        - php-mysql
+        - nano
+      notify: restart_apache
+
+    - name: Download and unpack Wordpress
+      unarchive: src=https://wordpress.org/latest.tar.gz dest=/var/www/html/ copy=no
+
+    - name: Create wp-config
+      template: src=../templates/wp-config.php.j2 dest=/var/www/html/wordpress/wp-config.php
+
+  handlers:
+    - name: restart_apache
+      service: name=httpd state=restarted enabled=yes
