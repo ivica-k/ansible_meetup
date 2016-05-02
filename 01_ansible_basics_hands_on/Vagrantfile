@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby : 
+
+VAGRANTFILE_API_VERSION = "2" 
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+  config.ssh.insert_key = false
+  config.vbguest.auto_update = false
+
+  config.vm.define "lb" do |machine|
+    machine.vm.box = "geerlingguy/centos7"
+    machine.vm.synced_folder '.', '/vagrant'
+    machine.vm.network :private_network, ip: "10.5.0.50",
+                       :netmask => "255.255.0.0"
+
+    machine.vm.hostname = "mysite.ans"
+    machine.vm.provider :virtualbox do |v|
+      v.memory = 512
+    end
+  end
+
+  config.vm.define "db" do |machine|
+    machine.vm.box = "geerlingguy/centos7"
+    machine.vm.synced_folder '.', '/vagrant'
+    machine.vm.network :private_network, ip: "10.5.0.52",
+                       :netmask => "255.255.0.0"
+
+    machine.vm.hostname = "db.ans"
+    machine.vm.provider :virtualbox do |v|
+      v.memory = 512
+    end
+  end
+  
+  (1..2).each do |i|
+    config.vm.define "wp#{i}" do |node|
+    node.vm.box = "geerlingguy/centos7"
+    node.vm.network :private_network, ip: "10.5.0.6#{i}", 
+:netmask => "255.255.0.0"
+    node.vm.hostname = "wp#{i}.ans"
+      node.vm.provider :virtualbox do |v|
+	v.memory = 512
+      end      
+    end
+  end
+end

@@ -1,0 +1,21 @@
+---
+- name: Database playbook
+  become: yes
+  gather_facts: yes
+  hosts: dbservers
+  tasks:
+    - name: Install MariaDB
+      yum: name={{ item }} state=present
+      with_items:
+        - mariadb
+        - mariadb-server
+        - MySQL-python
+
+    - name: Start MariaDB
+      service: name=mariadb state=started enabled=yes
+
+    - name: Create database for Wordpress
+      mysql_db: name=hands_on_wp state=present
+
+    - name: Create database user for Wordpress
+      mysql_user: name={{ wp_user }} password={{ wp_pass }} priv=*.*:ALL,GRANT state=present
