@@ -9,7 +9,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.hostmanager.ignore_private_ip = false
   config.hostmanager.include_offline = true
   config.ssh.insert_key = false
-  config.vbguest.auto_update = false
 
   config.vm.define "lb" do |machine|
     machine.vm.box = "geerlingguy/centos7"
