@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     machine.vm.network :private_network, ip: "10.5.0.50",
                        :netmask => "255.255.0.0"
 
-    machine.vm.hostname = "mysite.ans"
+    machine.vm.hostname = "mysite.com"
     machine.vm.provider :virtualbox do |v|
       v.memory = 512
     end
@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     machine.vm.network :private_network, ip: "10.5.0.52",
                        :netmask => "255.255.0.0"
 
-    machine.vm.hostname = "db.ans"
+    machine.vm.hostname = "db.mysite.com"
     machine.vm.provider :virtualbox do |v|
       v.memory = 512
     end
@@ -40,7 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     node.vm.box = "geerlingguy/centos7"
     node.vm.network :private_network, ip: "10.5.0.6#{i}", 
 :netmask => "255.255.0.0"
-    node.vm.hostname = "wp#{i}.ans"
+    node.vm.hostname = "wp#{i}.mysite.com"
       node.vm.provider :virtualbox do |v|
 	v.memory = 512
       end      
